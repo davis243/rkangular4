@@ -35,7 +35,7 @@ import {InvalidLinkComponent} from "./+forgot/+password/invalidlink.component";
 import {ResetPasswordComponent} from "./+forgot/+password/resetpassword.component";
 import {ResetPasswordMessageComponent} from "./+forgot/+password/mensajeresetpassword.component";
 import {AUTH_PROVIDERS} from "angular2-jwt";
-import {provideBackendService} from "./+rest/backend.serviceProvider";
+//import {provideBackendService} from "./+rest/backend.serviceProvider";
 import {NoAutorizadoComponent} from "./+auth/+noautorizado/noautorizado.component";
 import { Http, RequestOptions } from '@angular/http';
 import { AuthHttp, AuthConfig } from 'angular2-jwt';
@@ -54,6 +54,13 @@ type StoreType = {
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp( new AuthConfig({}), http, options);
+}
+export function provideBackendService(http: Http, authHttp: AuthHttp, router: Router ) {
+    let localhost:  String = environment.backend;
+    let port: String = environment.port;
+    let url = "http://" + localhost + ":" + port;
+    
+    return new BackendService(url, http , authHttp, router);
 }
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
@@ -101,14 +108,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
           deps: [Http, RequestOptions]
         },
        {
-              provide: BackendService, 
-              useFactory: (http, authHttp, router) => {
-                let localhost:  String = environment.backend;
-                let port: String = environment.port;
-                let url = "http://" + localhost + ":" + port;
-                
-                return new BackendService(url, http , authHttp, router);
-              },
+            provide: BackendService, 
+            useFactory: provideBackendService,
             deps: [Http, AuthHttp, Router]
         } 
       // provideBackendService(),
