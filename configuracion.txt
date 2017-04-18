@@ -1,0 +1,9 @@
+https://www.primefaces.org/primeng/#/setup
+npm install primeng --save
+
+https://github.com/auth0/angular2-jwt
+npm install angular2-jwt --save
+
+https://github.com/flauc/angular2-notifications
+npm install --save angular2-notifications
+from 'angular2-notifications'

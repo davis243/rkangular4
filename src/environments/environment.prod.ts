@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  backend: 'runakunaintapp',
+  port: '7999'
 };

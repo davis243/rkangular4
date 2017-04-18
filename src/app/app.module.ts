@@ -1,14 +1,14 @@
 import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import {HttpModule, JsonpModule} from "@angular/http";
 
 /*
  * Platform and Environment providers/directives/pipes
- */
-import { routing } from './app.routing'
+ */ 
+import {ENV_PROVIDERS} from "./environment";
+import {routing} from "./app.routing";
 // App is our top level component
 import { AppComponent } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
@@ -17,6 +17,23 @@ import { AppState, InternalStateType } from './app.service';
 // Core providers
 import {CoreModule} from "./core/core.module";
 import {SmartadminLayoutModule} from "./shared/layout/layout.module";
+import {LoginComponent} from "./+auth/+login/login.component";
+import {AuthGuard} from "./+auth/+guards/auth.guards";
+import {AuthenticationService} from "./+auth/+services/authentication.service";
+import {UserService} from "./+auth/+services/user.service";
+import {StorageService} from "./+common/storageLocalValues/storage.service";
+import {EmpleadoService} from "./+common/service/empleado.service";
+import {PushNotificationsModule} from 'angular2-notifications';
+import {SimpleNotificationsModule} from 'angular2-notifications';
+import {ForgotPasswordComponent} from "./+forgot/+password/password.component";
+import {MensajeRecPasswordComponent} from "./+forgot/+password/mensaje.component";
+import {ValidateLinkComponent} from "./+forgot/+password/validatelink.component";
+import {InvalidLinkComponent} from "./+forgot/+password/invalidlink.component";
+import {ResetPasswordComponent} from "./+forgot/+password/resetpassword.component";
+import {ResetPasswordMessageComponent} from "./+forgot/+password/mensajeresetpassword.component";
+import {AUTH_PROVIDERS} from "angular2-jwt";
+import {provideBackendService} from "./+rest/backend.serviceProvider";
+import {NoAutorizadoComponent} from "./+auth/+noautorizado/noautorizado.component";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -36,26 +53,42 @@ type StoreType = {
 @NgModule({
   bootstrap: [ AppComponent ],
   declarations: [
-    AppComponent,
+    	  AppComponent,
+	      LoginComponent,
+        NoAutorizadoComponent,
+        ForgotPasswordComponent,
+        MensajeRecPasswordComponent,
+        ValidateLinkComponent,
+        InvalidLinkComponent,
+        ResetPasswordComponent,
+        ResetPasswordMessageComponent,
   ],
   imports: [ // import Angular's modules
-    BrowserModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    HttpModule,
-
-    CoreModule,
-    SmartadminLayoutModule,
-
-
-
-    routing
+    	BrowserModule,
+    	BrowserAnimationsModule,
+    	FormsModule,
+    	HttpModule,
+	    JsonpModule,
+    	CoreModule,
+    	SmartadminLayoutModule,
+ 	    PushNotificationsModule,
+      SimpleNotificationsModule,
+      routing
   ],
   exports: [
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
-    // ENV_PROVIDERS,
-    APP_PROVIDERS
+    	  AuthGuard,
+        AuthenticationService,
+        UserService,
+        EmpleadoService,
+        StorageService,
+        PushNotificationsModule,
+        SimpleNotificationsModule,
+	   //   ENV_PROVIDERS,
+    	  APP_PROVIDERS,
+        AUTH_PROVIDERS,
+        provideBackendService(),
   ]
 })
 export class AppModule {
