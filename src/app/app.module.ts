@@ -1,3 +1,6 @@
+import { Router } from '@angular/router';
+import { environment } from './../environments/environment';
+import {BackendService} from "./+rest/backend.service";
 import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -34,6 +37,8 @@ import {ResetPasswordMessageComponent} from "./+forgot/+password/mensajeresetpas
 import {AUTH_PROVIDERS} from "angular2-jwt";
 import {provideBackendService} from "./+rest/backend.serviceProvider";
 import {NoAutorizadoComponent} from "./+auth/+noautorizado/noautorizado.component";
+import { Http, RequestOptions } from '@angular/http';
+import { AuthHttp, AuthConfig } from 'angular2-jwt';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -47,6 +52,9 @@ type StoreType = {
   disposeOldHosts: () => void
 };
 
+export function authHttpServiceFactory(http: Http, options: RequestOptions) {
+  return new AuthHttp( new AuthConfig({}), http, options);
+}
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
@@ -87,8 +95,23 @@ type StoreType = {
         SimpleNotificationsModule,
 	   //   ENV_PROVIDERS,
     	  APP_PROVIDERS,
-        AUTH_PROVIDERS,
-        provideBackendService(),
+        {
+          provide: AuthHttp,
+          useFactory: authHttpServiceFactory,
+          deps: [Http, RequestOptions]
+        },
+       {
+              provide: BackendService, 
+              useFactory: (http, authHttp, router) => {
+                let localhost:  String = environment.backend;
+                let port: String = environment.port;
+                let url = "http://" + localhost + ":" + port;
+                
+                return new BackendService(url, http , authHttp, router);
+              },
+            deps: [Http, AuthHttp, Router]
+        } 
+      // provideBackendService(),
   ]
 })
 export class AppModule {
