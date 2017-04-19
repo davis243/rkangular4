@@ -22,7 +22,7 @@ export class AuthenticationService {
     private retrieveRolsNameUserUrl =  '/login/retrieveRolsNameUser?idUsuario=';
 
     constructor(private backendService: BackendService,  private router: Router) {
-        this.token = localStorage.getItem('id_token');
+        this.token = localStorage.getItem('token');
     }
 
     public authenticateUser(cuentaUsuario: string) {
@@ -66,7 +66,7 @@ export class AuthenticationService {
                     this.token = token;
 
                     // store username and jwt token in local storage to keep user logged in between page refreshes
-                    localStorage.setItem('id_token', token);
+                    localStorage.setItem('token', token);
 
                     // return true to indicate successful login
                     return true;
@@ -83,7 +83,7 @@ export class AuthenticationService {
     logout(): void {
         // clear token remove user from local storage to log user out
         this.token = null;
-        localStorage.removeItem('id_token');
+        localStorage.removeItem('token');
         localStorage.removeItem('modulos');
         localStorage.removeItem('rolName');
         localStorage.removeItem('localStorageCommonsValues');
